@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->  <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	
+	<title>雪球上的Node.js</title>
+	
+	<meta name="viewport" content="width=1024, user-scalable=no">
+	
+	<!-- Core and extension CSS files -->
+	<link rel="stylesheet" href="../core/deck.core.css">
+	
+	<link rel="stylesheet" id="style-theme-link" href="../themes/style/xueqiu.css">
+	<link rel="stylesheet" id="transition-theme-link" href="../themes/transition/horizontal-slide.css">
+  <link rel="stylesheet" href="../extensions/hash/deck.hash.css">
+	
+	<script src="../modernizr.custom.js"></script>
+</head>
+
+<body class="deck-container">
+
+<section class="slide" id="title-slide">
+	<h1>雪球上的Node.js</h1>
+  <p>孟祥宇
+    <a href="http://weibo.com/mengxy">weibo.com/mengxy</a> (@蒙懵猛孟)
+  </p>
+</section>
+
+<section class="slide" id="what-is-xueqiu">
+  <h2>什么是雪球</h2>
+  <img src="map.gif">
+  <p>雪球(<a href="http://xueqiu.com">xueqiu.com</a>)是全球化的<em>投资交流平台</em>，给投资者提供跨市场、跨品种的数据查询、新闻订阅和互动交流服务，目前已覆盖A股、港股、美股市场。</p>
+  <p class="slide">一个逐步完善的 Web Application，浏览器端使用了大量的Backbone.js。</p>
+</section>
+
+<section class="slide" id="great-frontend-at-xueqiu">
+  <h2>雪球的“大前端”</h2>
+  <ul>
+    <li class="slide">
+      <h3>面向用户的工程师</h3>
+      <p>让 Web 应用的速度更快，用起来更方便，看起来更舒服</p>
+    </li> 
+    <li class="slide">
+      <h3>浏览器是我们的工作介质</h3>
+      <p>HTML，CSS，JavaScript</p>
+    </li> 
+    <li class="slide">
+      <h3>服务器也是</h3>
+      <ol>
+        <li>HTML生成的地方</li>
+        <li>很多前端优化要在服务器端完成</li>
+        <li>Node.js 出现了</li>
+      </ol>
+    </li> 
+  </ul>
+</section>
+
+<section class="slide" id="what-role-nodejs-is-playing">
+	<h2>我们用Node.js做什么</h2>
+	<ol>
+		<li>
+			<h3>渲染页面</h3>
+			<p>接收浏览器的页面请求，渲染对应的页面 HTML ，返回给浏览器</p>
+		</li>
+		<li>
+			<h3>获取数据</h3>
+			<p>从后端 API 获取页面需要的数据</p>
+		</li>
+    <li>
+      <h3>测试部署</h3>
+      <p>一个简单的集成测试部署环境</p>
+    </li>
+	</ol>
+</section>
+
+<section class="slide" id="page-rendering">
+	<h2>渲染页面</h2>
+    <h3>Express, node web framework</h3>
+    <p>
+      <a href="http://expressjs.com/">http://expressjs.com/</a>
+    </p>
+    <p>《使用 express 构建 Web 应用》</p>
+    <p>
+      <a href="http://www.slideshare.net/mengxy/build-web-application-by-express">http://www.slideshare.net/mengxy/build-web-application-by-express</a>
+    </p>
+</section>
+
+<section class="slide" id="http-client">
+  <h2>获取数据</h2>
+  <p>使用 node 的 http client 请求后端的API</p>
+</section>
+
+<section class="slide" id="frontpage-illus-1">
+  <img src="home.png">
+</section>
+
+<section class="slide" id="bootrap-data-fetching">
+  <h2>获取数据</h2>
+  <blockquote>
+    When your app first loads, it's common to have a set of initial models that you know you're going to need, in order to render the page. Instead of firing an extra AJAX request to fetch them, a nicer pattern is to have their data already bootstrapped into the page.
+    <cite>
+      <a href="http://documentcloud.github.com/backbone/#FAQ-bootstrap">http://documentcloud.github.com/backbone/#FAQ-bootstrap</a> 
+    </cite>
+  </blockquote>
+</section>
+
+<section class="slide" id="http-client">
+  <h2>获取数据</h2>
+  <h3>request (<a href="https://github.com/mikeal/request">https://github.com/mikeal/request</a>)</h3>
+  <ul>
+    <li>
+      <p>
+        应用广泛
+        <img src="request-npm.png">
+      </p>
+    </li>
+    <li>
+      测试充分
+    </li>
+    <li class="slide">
+      <em>终于支持了timeout和maxSockets</em>
+    </li>
+  </ul>
+</section>
+
+<section class="slide" id="http-timeout">
+  <h2>timeout</h2>
+  <div class="slide">
+    <h3>为什么需要</h3>
+    <ul>
+      <li>后端接口可能出问题，即使出问题我们也要在可忍受的时间内给用户响应</li>
+      <li>连接不会自己终止，socket会一直占用。</li>
+    </ul>
+  </div>
+  <div class="slide">
+    <h3>做法</h3>
+    <ul>
+      <li>
+        在请求超过timeout之后返回ETIMEOUT的错误信息，应用获得超时信息可以给用户响应。
+      </li>
+      <li>
+        超时之后还会终止请求，释放socket。
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" id="maxSockets">
+  <h2>maxSockets</h2>
+  <ul>
+    <li class="slide">Node 的 http client 自动使用 socket 池，每个 host 最多5个 sockets，这些socket重用可以控制资源的增长</li>
+    <li class="slide">但是当我们每个 host 需要并发多个请求的时候，这就变成了一个严重的瓶颈</li>
+    <li class="slide">
+      假设每秒钟二十次页面访问，每个页面发起三个 http 请求。开8个worker，默认有40个可用socket。还有可能有的http请求超时。
+    </li>
+    <li class="slide">我们这种情景就严重不够用了，把max-sockets设到了100000</li>
+    <li class="slide">LinkedIn Mobile干脆取消了这个限制</li>
+  </ul>
+</section>
+
+<section class="slide" id="parallel-request">
+  <h2>并发请求</h2>
+</section>
+
+<section class="slide" id="frontpage-illus-1">
+  <img src="home.png">
+</section>
+
+<section class="slide" id="parallel-request">
+  <h2>如果不并发</h2>
+  <pre>
+  <code>
+    Request("url1", function(error, data1) {
+      Request("url2", function(error, data2) {
+        Request("url3", function(error, data3) {
+          res.render("tpl", {
+            "data1": data1,
+            "data2": data2,
+            "data3": data3
+          });
+        });
+      });
+    });
+  </code>
+  </pre>
+  <p class="slide">
+    Latency = Request_1 + Request_2 + ... + Request_n;
+  </p>
+</section>
+
+
+<section class="slide" id="parallel-request">
+  <h2>并发请求</h2>
+  <blockquote>
+    <img src="parallel.png">
+    <cite>
+      <a href="http://engineering.linkedin.com/nodejs/blazing-fast-nodejs-10-performance-tips-linkedin-mobile">LinkedIn Engineering</a>
+    </cite>
+  </blockquote>
+  <p class="slide">
+    Latency = Request_1 + Request_2 + ... + Request_n;
+  </p>
+  <p class="slide">
+    Latency = Max(Request_1, Request_2, ... , Request_n);
+  </p>
+</section>
+
+<section class="slide" id="ep">
+  <h2>
+    EventProxy
+  </h2>
+  <p>
+   <a href="https://github.com/JacksonTian/eventproxy">https://github.com/JacksonTian/eventproxy</a>
+  </p>
+  <pre>
+    <code>
+  var proxy = new EventProxy();
+  var render = function(data1, data2, data3) {
+    res.render(tml, {"data1": data1, "data2": data2, "data3": data3});
+  };
+  proxy.assign("req1", "req2", "req3", render);
+
+  Request("url1", function(error, data) {
+    proxy.trigger("req1", data)}
+  );
+  Request("url2", function(error, data) {
+    proxy.trigger("req2", data)}
+  );
+  Request("url3", function(error, data) {
+    proxy.trigger("req3", data)}
+  );
+   </code>
+  </pre>
+</section>
+
+<section class="slide" id="development-deployment">
+  <h2>开发与部署</h2>
+  <ul>
+    <li>
+      <h3>Node-config</h3>
+      <p>
+        <a href="http://lorenwest.github.com/node-config/">http://lorenwest.github.com/node-config/</a>
+      </p>
+      <p>
+        为不同的环境设置不同的配置文件，支持js，json和haml。
+      </p>
+      <p>
+        我们用它管理站点信息，域名，API接口，文件目录，静态文件压缩选项。。。
+      </p>
+    </li>
+  </ul>
+</section>
+
+<section class="slide" id="static-optimization-deployment">
+  <h2>静态文件</h2>
+  <ul>
+    <li>
+      <h3>JS压缩：UglifyJS</h3>
+      <p>
+        <a href="https://github.com/mishoo/UglifyJS">https://github.com/mishoo/UglifyJS</a>
+      </p>
+    </li>
+    <li>
+      <h3>CSS压缩：sqwish</h3>
+      <p>
+        <a href="https://github.com/ded/sqwish">https://github.com/ded/sqwish</a>
+      </p>
+    </li>
+  </ul>
+</section>
+
+<section class="slide" id="auto-static-version">
+  <h2>版本号更新</h2>
+  <p>
+    <img src="file-version.png" align='left'>
+  </p>
+  <h3>Git Keyword Expansion</h3>
+  <p>
+    <a href="http://progit.org/book/ch7-2.html#keyword_expansion">http://progit.org/book/ch7-2.html#keyword_expansion</a>
+  </p>
+  <h3>修改./.gitattrbutes</h3>
+  <pre>
+    <code>
+      *.css ident
+      *.js ident
+    </code>
+  </pre>
+  <h3>修改JS，CSS文件</h3>
+  <pre>
+    <code>
+      /*SNBVERSION:$Id$*/
+      // After git checked out
+      /*SNBVERSION:$Id: 917aa04eb6fcb1e64cc0148dd7768c1930ecf59a $*/
+    </code>
+  </pre>
+</section>
+
+<section class="slide" id="QA">
+	<h2>Q&A</h2>
+  <h2>其他资料</h2>
+  <ul>
+    <li>
+    Blazing fast node.js: 10 performance tips from LinkedIn Mobile
+      <a href="http://engineering.linkedin.com/nodejs/blazing-fast-nodejs-10-performance-tips-linkedin-mobile">http://engineering.linkedin.com/nodejs/blazing-fast-nodejs-10-performance-tips-linkedin-mobile</a>
+    </li>
+    <li>
+    Socket Pooling on Node.js
+    <a href="http://bravenewmethod.wordpress.com/2010/12/13/socket-pooling-on-node-js/">http://bravenewmethod.wordpress.com/2010/12/13/socket-pooling-on-node-js/</a>
+    </li>
+  </ul>
+  <h2>联系我</h2>
+  <p>
+    <a href="http://mengxy.net/about">mengxy.net/about</a>
+  </p>
+</section>
+
+<img src="../themes/style/h.png" class="logo" width="240px">
+
+<script src="../jquery-1.7.min.js"></script>
+
+<!-- Deck Core and extensions -->
+<script src="../core/deck.core.js"></script>
+<script src="../extensions/hash/deck.hash.js"></script>
+
+<!-- Specific to this page -->
+<script type="text/javascript">
+$(function() {
+	// Deck initialization
+	$.deck('.slide');
+});
+
+</script>
+
+</body>
+</html>

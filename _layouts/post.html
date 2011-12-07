@@ -1,0 +1,22 @@
+---
+layout: default
+---
+<article>
+  <header>
+    <h2> 
+      <a href=
+      {% if (page.link) %} 
+        "{{ page.link }}" class="out-link"
+      {% else %} 
+        "{{ page.url }}"
+      {% endif %}
+      >{{ page.title }}</a>
+    </h2>
+    <p>
+      <time datetime="{{ page.date | date_to_xmlschema}}">{{ page.date | date: "%Y年%m月%d日"}}</time>
+      •
+      <a title="固定链接" class="permalink" href="{{ page.url }}">∞</a>
+    </p>
+  </header>
+  {{ content }}
+</article>
