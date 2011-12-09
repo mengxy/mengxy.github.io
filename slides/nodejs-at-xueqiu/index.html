@@ -48,8 +48,8 @@
 <section class="slide" id="what-is-xueqiu">
   <h2>什么是雪球</h2>
   <img src="map.gif">
-  <p>雪球(<a href="http://xueqiu.com">xueqiu.com</a>)是全球化的<em>投资交流平台</em>，给投资者提供跨市场、跨品种的数据查询、新闻订阅和互动交流服务，目前已覆盖A股、港股、美股市场。</p>
-  <p class="slide">一个逐步完善的 Web Application，浏览器端使用了大量的Backbone.js。</p>
+  <p>雪球(<a href="http://xueqiu.com">xueqiu.com</a>)是全球化的<em>投资交流平台</em>，给投资者提供跨市场、跨品种的数据查询、新闻订阅和互动交流服务，目前已覆盖A股、港股、美股市场</p>
+  <p class="slide">一个正在进步的 Web Application</p>
 </section>
 
 <section class="slide" id="great-frontend-at-xueqiu">
@@ -86,8 +86,8 @@
 			<p>从后端 API 获取页面需要的数据</p>
 		</li>
     <li>
-      <h3>测试部署</h3>
-      <p>一个简单的集成测试部署环境</p>
+      <h3>开发部署</h3>
+      <p>一个简单的集成自动化环境</p>
     </li>
 	</ol>
 </section>
@@ -137,8 +137,21 @@
       测试充分
     </li>
     <li class="slide">
-      <em>终于支持了timeout和maxSockets</em>
+      <em>终于支持了maxSockets和timeout</em>
     </li>
+  </ul>
+</section>
+
+<section class="slide" id="maxSockets">
+  <h2>maxSockets</h2>
+  <ul>
+    <li class="slide">Node 的 http client 自动使用 socket 池，每个 host 最多5个 sockets，这些socket重用可以控制资源的增长</li>
+    <li class="slide">但是当我们每个 host 需要并发多个请求的时候，这就变成了一个严重的瓶颈</li>
+    <li class="slide">
+      假设每秒钟二十次页面访问，每个页面发起三个 http 请求。开8个worker，默认有40个可用socket。还有可能有的http请求超时。
+    </li>
+    <li class="slide">我们这种情景就严重不够用了，把max-sockets设到了100000</li>
+    <li class="slide">LinkedIn Mobile干脆取消了这个限制</li>
   </ul>
 </section>
 
@@ -162,19 +175,6 @@
       </li>
     </ul>
   </div>
-</section>
-
-<section class="slide" id="maxSockets">
-  <h2>maxSockets</h2>
-  <ul>
-    <li class="slide">Node 的 http client 自动使用 socket 池，每个 host 最多5个 sockets，这些socket重用可以控制资源的增长</li>
-    <li class="slide">但是当我们每个 host 需要并发多个请求的时候，这就变成了一个严重的瓶颈</li>
-    <li class="slide">
-      假设每秒钟二十次页面访问，每个页面发起三个 http 请求。开8个worker，默认有40个可用socket。还有可能有的http请求超时。
-    </li>
-    <li class="slide">我们这种情景就严重不够用了，把max-sockets设到了100000</li>
-    <li class="slide">LinkedIn Mobile干脆取消了这个限制</li>
-  </ul>
 </section>
 
 <section class="slide" id="parallel-request">
@@ -235,7 +235,7 @@
     <code>
   var proxy = new EventProxy();
   var render = function(data1, data2, data3) {
-    res.render(tml, {"data1": data1, "data2": data2, "data3": data3});
+    res.render("tpl", {"data1": data1, "data2": data2, "data3": data3});
   };
   proxy.assign("req1", "req2", "req3", render);
 
@@ -315,7 +315,7 @@
 </section>
 
 <section class="slide" id="QA">
-	<h2>Q&A</h2>
+	<h2>Q&amp;A</h2>
   <h2>其他资料</h2>
   <ul>
     <li>
