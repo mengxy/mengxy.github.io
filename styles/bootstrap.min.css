@@ -364,12 +364,7 @@ article header p {font-size:.8em;margin-bottom:0}
 .breaker{font-size: 2em;padding:50px;text-align:center;color:#F4F4F4}
 #contacts {margin-left:4px;}
 #contacts > li {list-style:none;padding: 4px;}
-.slides li {
-  padding: 10px 0;
-}
-.slides h2 {
-  margin-bottom: 20px;
-}
-article img {
-  max-width:100%
-}
+.slides li { padding: 10px 0; }
+.slides h2 { margin-bottom: 20px; }
+article img { max-width:100% }
+article { word-break:break-word; }
