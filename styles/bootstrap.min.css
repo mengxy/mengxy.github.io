@@ -370,3 +370,6 @@ article header p {font-size:.8em;margin-bottom:0}
 .slides h2 {
   margin-bottom: 20px;
 }
+article img {
+  max-width:100%
+}
